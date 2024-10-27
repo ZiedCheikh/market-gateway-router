@@ -1,4 +1,4 @@
-package tu.startup.market.gateway;
+package tu.startup.market.gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
