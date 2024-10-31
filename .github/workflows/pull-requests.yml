@@ -1,0 +1,55 @@
+name: Pull Requests Checker
+on:
+  pull_request:
+    types: [opened, labeled, unlabeled, synchronize]
+jobs:
+  check-pr-labels:
+    name: 'Check PR labels'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: mheap/github-action-required-labels@v5
+        with:
+          mode: minimum
+          count: 1
+          labels: "bug,feature,enhancement,breaking,tests,documentation,internal,dependencies"
+          message: "Maintainer needs to assign at least one label before merge"
+  build:
+    name: "Build Code"
+    needs: check-pr-labels
+    runs-on: ubuntu-latest
+    permissions:
+        contents: write
+        packages: write
+        checks: write
+        pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Build with Gradle Wrapper
+        run: ./gradlew build -PskipTests -PskipQuality
+  check_quality:
+    name: "Check for Quality"
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      checks: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Build with Gradle Wrapper
+        run: ./gradlew build
+
