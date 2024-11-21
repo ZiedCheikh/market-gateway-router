@@ -9,14 +9,11 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 @Configuration
 public class JwtConfig {
 
-    @Value("${spring.security.oauth2.client.provider.spring.issuer-uri}")
+    @Value("${auth.server.issuer.url}")
     private String issuerUri;
-
-
-    private static final String JWKS_URL = "http://localhost:9000/oauth2/jwks";
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withJwkSetUri(JWKS_URL).build();
+        return NimbusJwtDecoder.withJwkSetUri(issuerUri + "/oauth2/jwks").build();
     }
 }

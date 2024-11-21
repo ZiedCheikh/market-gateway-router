@@ -1,0 +1,74 @@
+{
+    "TableName": "market-orders",
+
+    "AttributeDefinitions": [
+        {
+            "AttributeName": "order_id",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "order_number",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "order_status",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "customer_id",
+            "AttributeType": "S"
+        }
+    ],
+
+    "KeySchema": [
+        {
+            "AttributeName": "order_id",
+            "KeyType": "HASH"
+        },
+        {
+            "AttributeName": "order_number",
+            "KeyType": "RANGE"
+        }
+    ],
+
+    "ProvisionedThroughput": {
+        "ReadCapacityUnits": 1,
+        "WriteCapacityUnits": 1
+    },
+
+
+    "GlobalSecondaryIndexes": [
+        {
+            "IndexName": "status_index",
+            "KeySchema": [
+                {
+                    "AttributeName": "order_status",
+                    "KeyType": "HASH"
+                }
+            ],
+            "Projection": {
+                "ProjectionType": "ALL"
+            },
+            "ProvisionedThroughput": {
+                "ReadCapacityUnits": 1,
+                "WriteCapacityUnits": 1
+            }
+        },
+        {
+            "IndexName": "customer_index",
+            "KeySchema": [
+                {
+                    "AttributeName": "customer_id",
+                    "KeyType": "HASH"
+                }
+            ],
+            "Projection": {
+                "ProjectionType": "ALL"
+            },
+            "ProvisionedThroughput": {
+                "ReadCapacityUnits": 1,
+                "WriteCapacityUnits": 1
+            }
+        }
+    ]
+}

@@ -1,11 +1,12 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.3.4'
-	id 'io.spring.dependency-management' version '1.1.6'
+	alias(libs.plugins.spring.boot)
+	alias(libs.plugins.spring.dependency)
+	id 'checkstyle'
+	id 'pmd'
+	alias(libs.plugins.spotbugs)
+	alias(libs.plugins.dependency.updates )
 }
-
-group = 'tu.startup.market.gateway'
-version = '0.0.1-SNAPSHOT'
 
 java {
 	toolchain {
@@ -18,30 +19,51 @@ repositories {
 }
 
 wrapper {
-	gradleVersion='8.10.2'
-}
-
-ext {
-	set('springCloudVersion', "2023.0.3")
+	gradleVersion = libs.versions.gradle.get()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-
-	implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
-	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation libs.spring.oauth2.client
+	implementation libs.spring.security
+	implementation libs.spring.webflux
+	implementation libs.spring.gateway
+	implementation libs.spring.eureka.client
+	implementation libs.spring.actuator
 }
 
 dependencyManagement {
 	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${libs.versions.spring.cloud.get()}"
 	}
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
+checkstyle {
+	toolVersion = libs.versions.checkstyle.get()
+}
+
+tasks.withType(Checkstyle) {
+	reports {
+		xml.destination rootProject.file("build/reports/checkstyle/checkstyle.xml")
+	}
+}
+
+
+pmd {
+	toolVersion = libs.versions.pmd.get()
+	ruleSetFiles = files("config/pmd/pmd.xml")
+	ruleSets = []
+}
+
+tasks.withType(Pmd) {
+	reports {
+		xml.destination rootProject.file("build/reports/pmd/pmd.xml")
+		html.destination rootProject.file("build/reports/pmd/pmd.html")
+	}
+	setSource(fileTree(dir: "${projectDir}/src/", include: "**/*.java"))
+}
+
+
+spotbugs {
+	ignoreFailures = true
+	showStackTraces = false
 }

@@ -1,6 +1,6 @@
 FROM eclipse-temurin:21
 
-ARG JAVA_PORT=8080
+ARG JAVA_PORT=8082
 
 ADD docker-cmd.sh /project/
 

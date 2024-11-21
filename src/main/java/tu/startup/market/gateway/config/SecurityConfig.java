@@ -11,7 +11,7 @@ import org.springframework.security.web.server.util.matcher.ServerWebExchangeMat
 @Configuration
 public class SecurityConfig {
     @Bean
-    SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+    SecurityWebFilterChain securityWebFilterChain(final ServerHttpSecurity http) {
         http.securityMatcher(new NegatedServerWebExchangeMatcher(
                         ServerWebExchangeMatchers.pathMatchers("/actuator/health")))
                 .authorizeExchange((authorize) -> authorize.anyExchange().authenticated())

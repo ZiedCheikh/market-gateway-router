@@ -12,7 +12,7 @@ public class JwtService {
     @Autowired
     private JwtDecoder jwtDecoder;
 
-    public Jwt decodeJwt(String token) {
+    public Jwt decodeJwt(final String token) {
         try {
             return jwtDecoder.decode(token);
         } catch (JwtException e) {

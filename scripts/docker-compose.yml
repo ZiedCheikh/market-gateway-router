@@ -1,0 +1,106 @@
+version: '3.8'
+
+networks:
+  custom_net:
+    driver: bridge
+
+services:
+  authorizationserver:
+    image: startup-authorization-server:latest
+    container_name: startup-authorization-server
+    ports:
+      - "9000:9000"
+    networks:
+      - custom_net
+    environment:
+      - ENVIRONMENT=dev
+      - HOST_URL=http://authorizationserver:9000
+
+  tokengenerator:
+    image: startup-token-generator:latest
+    container_name: startup-token-generator
+    ports:
+      - "8383:8383"
+    environment:
+      - ENVIRONMENT=dev
+      - HOST_URL=http://localhost:8383
+      - AUTH_SERVER_ISSUER_URL=http://authorizationserver:9000/startup/authserver
+      - AUTH_SERVER_HOST_URL=http://localhost:9000/startup/authserver
+    networks:
+      - custom_net
+    depends_on:
+      - authorizationserver
+
+  marketdiscovery:
+    image: market-discovery-service:latest
+    container_name: market-discovery-service
+    depends_on:
+      - authorizationserver
+    ports:
+      - "8010:8010"
+    networks:
+      - custom_net
+    environment:
+      - ENVIRONMENT=dev
+      - MARKET_DISCOVERY_HOST=marketdiscovery
+
+  marketgateway:
+    image: market-gateway-router:latest
+    container_name: market-gateway-router
+    ports:
+      - "8082:8082"
+    networks:
+      - custom_net
+    depends_on:
+      - authorizationserver
+    restart: on-failure
+    environment:
+      - ENVIRONMENT=dev
+      - MARKET_DISCOVERY_HOST=http://marketdiscovery:8010
+      - AUTH_SERVER_ISSUER_URL=http://authorizationserver:9000/startup/authserver
+      - AUTH_SERVER_HOST_URL=http://myhost:9000
+      - MARKET_GATEWAY_HOST_URL=http://myhost:8082
+  sales:
+    image: market-sales-service:latest
+    container_name: market-sales-service
+    depends_on:
+      - authorizationserver
+      - marketdiscovery
+    ports:
+      - "8181:8181"
+    environment:
+      - ENVIRONMENT=dev
+      - AWS_REGION=eu-west-1
+      - AWS_ACCESS_KEY_ID=AKIAZLK4N52DPAS5BLS6
+      - AWS_SECRET_ACCESS_KEY=A6KSvZSWWpIn75ZZfk
+      - AWS_DYNAMODB_ENDPOINT=http://dynamodb:8000
+      - MARKET_DISCOVERY_HOST=http://marketdiscovery:8010
+      - AUTH_SERVER_ISSUER_URL=http://authorizationserver:9000/startup/authserver
+    networks:
+      - custom_net
+  orders:
+    image: market-orders-service:latest
+    container_name: market-orders-service
+    depends_on:
+      - authorizationserver
+      - marketdiscovery
+    ports:
+      - "8080:8080"
+    environment:
+      - AWS_REGION=eu-west-1
+      - AWS_ACCESS_KEY_ID=AKIAZLK4N52DPAS5BLS6
+      - AWS_SECRET_ACCESS_KEY=A6KSvZSWWpIn75ZZfk
+      - DYNAMODB_ENDPOINT=http://dynamodb:8000
+      - MARKET_DISCOVERY_HOST=http://marketdiscovery:8010
+      - AUTH_SERVER_ISSUER_URL=http://authorizationserver:9000/startup/authserver
+    networks:
+      - custom_net
+  dynamodb:
+    image: amazon/dynamodb-local
+    container_name: dynamodb-local
+    ports:
+      - "8000:8000"
+    environment:
+      - SPRING_DATASOURCE_PASSWORD=secret
+    networks:
+      - custom_net

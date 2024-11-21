@@ -1,0 +1,22 @@
+{
+  "TableName": "metadata",
+
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "metadata_id",
+      "AttributeType": "S"
+    }
+  ],
+
+  "KeySchema": [
+    {
+      "AttributeName": "metadata_id",
+      "KeyType": "HASH"
+    }
+  ],
+
+  "ProvisionedThroughput": {
+    "ReadCapacityUnits": 1,
+    "WriteCapacityUnits": 1
+  }
+}
