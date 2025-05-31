@@ -7,7 +7,6 @@ plugins {
 	alias(libs.plugins.spotbugs)
 	alias(libs.plugins.dependency.updates )
 }
-
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
@@ -22,6 +21,16 @@ wrapper {
 	gradleVersion = libs.versions.gradle.get()
 }
 
+checkstyle {
+    toolVersion = libs.versions.checkstyle.get()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${libs.versions.spring.cloud.get()}"
+    }
+}
+
 dependencies {
 	implementation libs.spring.oauth2.client
 	implementation libs.spring.security
@@ -31,22 +40,12 @@ dependencies {
 	implementation libs.spring.actuator
 }
 
-dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${libs.versions.spring.cloud.get()}"
-	}
-}
-
-checkstyle {
-	toolVersion = libs.versions.checkstyle.get()
-}
-
 tasks.withType(Checkstyle) {
 	reports {
-		xml.destination rootProject.file("build/reports/checkstyle/checkstyle.xml")
+		xml.required = true
+		xml.outputLocation = rootProject.file("build/reports/checkstyle/checkstyle.xml")
 	}
 }
-
 
 pmd {
 	toolVersion = libs.versions.pmd.get()
@@ -56,12 +55,13 @@ pmd {
 
 tasks.withType(Pmd) {
 	reports {
-		xml.destination rootProject.file("build/reports/pmd/pmd.xml")
-		html.destination rootProject.file("build/reports/pmd/pmd.html")
+		xml.required = true
+		xml.outputLocation = rootProject.file("build/reports/pmd/pmd.xml")
+		html.required = true
+		html.outputLocation = rootProject.file("build/reports/pmd/pmd.html")
 	}
 	setSource(fileTree(dir: "${projectDir}/src/", include: "**/*.java"))
 }
-
 
 spotbugs {
 	ignoreFailures = true

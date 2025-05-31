@@ -5,6 +5,13 @@ networks:
     driver: bridge
 
 services:
+  marketadminportal:
+    image: market-admin-portal:latest
+    container_name: market-admin-portal
+    ports:
+      - "4000:80"
+    networks:
+      - custom_net
   authorizationserver:
     image: startup-authorization-server:latest
     container_name: startup-authorization-server
@@ -60,6 +67,8 @@ services:
       - AUTH_SERVER_ISSUER_URL=http://authorizationserver:9000/startup/authserver
       - AUTH_SERVER_HOST_URL=http://myhost:9000
       - MARKET_GATEWAY_HOST_URL=http://myhost:8082
+      - MARKET_ADMIN_PORTAL_HOST_URL=http://marketadminportal:80/portal
+      - MARKET_GATEWAY_HOST=http://myhost:8082
   sales:
     image: market-sales-service:latest
     container_name: market-sales-service
@@ -68,6 +77,7 @@ services:
       - marketdiscovery
     ports:
       - "8181:8181"
+      - "5005:5005"
     environment:
       - ENVIRONMENT=dev
       - AWS_REGION=eu-west-1
@@ -76,6 +86,8 @@ services:
       - AWS_DYNAMODB_ENDPOINT=http://dynamodb:8000
       - MARKET_DISCOVERY_HOST=http://marketdiscovery:8010
       - AUTH_SERVER_ISSUER_URL=http://authorizationserver:9000/startup/authserver
+      - MARKET_GATEWAY_HOST=http://myhost:8082
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     networks:
       - custom_net
   orders:
@@ -93,6 +105,7 @@ services:
       - DYNAMODB_ENDPOINT=http://dynamodb:8000
       - MARKET_DISCOVERY_HOST=http://marketdiscovery:8010
       - AUTH_SERVER_ISSUER_URL=http://authorizationserver:9000/startup/authserver
+      - MARKET_GATEWAY_HOST=http://myhost:8082
     networks:
       - custom_net
   dynamodb:

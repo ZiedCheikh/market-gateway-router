@@ -1,18 +1,18 @@
 [versions]
 
 # Gradle
-gradle = "8.14.1"
+gradle = "9.0.0"
 
 # Spring
-spring-boot = "3.4.4"
-spring-cloud = "2024.0.1"
+spring-boot = "3.5.4"
+spring-cloud = "2025.0.0"
 spring-dependency-management = "1.1.7"
 dependency-updates = "0.52.0"
 
 # Quality Tools
 checkstyle = "10.23.0"
 pmd = "7.12.0"
-spotbugs = "6.1.12"
+spotbugs = "6.2.3"
 
 
 [libraries]
@@ -21,7 +21,7 @@ spring-oauth2-client = { module = "org.springframework.boot:spring-boot-starter-
 spring-security = { module = "org.springframework.boot:spring-boot-starter-security" }
 spring-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
 spring-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
-spring-gateway = { module = "org.springframework.cloud:spring-cloud-starter-gateway" }
+spring-gateway = { module = "org.springframework.cloud:spring-cloud-starter-gateway"}
 spring-eureka-client = { module = "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client" }
 
 [plugins]
