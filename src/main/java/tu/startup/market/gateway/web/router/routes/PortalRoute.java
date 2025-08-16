@@ -9,7 +9,7 @@ import java.util.function.Function;
 import static tu.startup.market.gateway.web.router.routes.Constant.APP_MARKET_PORTAL_BASE_URI;
 import static tu.startup.market.gateway.web.router.routes.Constant.GATEWAY_MARKET_PORTAL_BASE_URI;
 
-public class PortalRoutes {
+public class PortalRoute {
 
     public static Function<PredicateSpec, Buildable<Route>> marketPortalRoute(final String marketAdminPortalUrl) {
         return r -> r

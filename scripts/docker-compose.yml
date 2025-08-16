@@ -69,21 +69,27 @@ services:
       - MARKET_GATEWAY_HOST_URL=http://myhost:8082
       - MARKET_ADMIN_PORTAL_HOST_URL=http://marketadminportal:80/portal
       - MARKET_GATEWAY_HOST=http://myhost:8082
+      - AUTH_SUCCESS_REDIRECT_URL=http://myhost:8082/portal/launchpad/dashboard/analytics
+      - LOGOUT_SUCCESS_REDIRECT_URL=http://myhost:8082/portal/landing
   sales:
     image: market-sales-service:latest
     container_name: market-sales-service
     depends_on:
       - authorizationserver
       - marketdiscovery
+      - localstack
     ports:
       - "8181:8181"
       - "5005:5005"
     environment:
       - ENVIRONMENT=dev
       - AWS_REGION=eu-west-1
-      - AWS_ACCESS_KEY_ID=AKIAZLK4N52DPAS5BLS6
-      - AWS_SECRET_ACCESS_KEY=A6KSvZSWWpIn75ZZfk
-      - AWS_DYNAMODB_ENDPOINT=http://dynamodb:8000
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DYNAMODB_ENDPOINT=http://localstack:4566
+      - AWS_S3_ENDPOINT=http://localstack:4566
+      - AWS_S3_BUCKET_SALES=market-sales
+      - S3_FOLDER_POSTERS=posters/
       - MARKET_DISCOVERY_HOST=http://marketdiscovery:8010
       - AUTH_SERVER_ISSUER_URL=http://authorizationserver:9000/startup/authserver
       - MARKET_GATEWAY_HOST=http://myhost:8082
@@ -96,24 +102,29 @@ services:
     depends_on:
       - authorizationserver
       - marketdiscovery
+      - localstack
     ports:
       - "8080:8080"
     environment:
       - AWS_REGION=eu-west-1
-      - AWS_ACCESS_KEY_ID=AKIAZLK4N52DPAS5BLS6
-      - AWS_SECRET_ACCESS_KEY=A6KSvZSWWpIn75ZZfk
-      - DYNAMODB_ENDPOINT=http://dynamodb:8000
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - DYNAMODB_ENDPOINT=http://localstack:4566
       - MARKET_DISCOVERY_HOST=http://marketdiscovery:8010
       - AUTH_SERVER_ISSUER_URL=http://authorizationserver:9000/startup/authserver
       - MARKET_GATEWAY_HOST=http://myhost:8082
     networks:
       - custom_net
-  dynamodb:
-    image: amazon/dynamodb-local
-    container_name: dynamodb-local
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
     ports:
-      - "8000:8000"
+      - "4566:4566"
     environment:
-      - SPRING_DATASOURCE_PASSWORD=secret
+      - SERVICES=dynamodb,s3
+      - DEBUG=1
+      - AWS_DEFAULT_REGION=eu-west-1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - custom_net

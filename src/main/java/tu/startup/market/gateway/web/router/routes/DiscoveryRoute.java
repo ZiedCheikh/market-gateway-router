@@ -11,7 +11,7 @@ import static org.springframework.http.HttpMethod.GET;
 import static tu.startup.market.gateway.web.router.routes.Constant.APP_MARKET_DISCOVERY_BASE_URI;
 import static tu.startup.market.gateway.web.router.routes.Constant.GATEWAY_MARKET_DISCOVERY_BASE_URI;
 
-public class DiscoveryRoutes {
+public class DiscoveryRoute {
 
     public static Function<PredicateSpec, Buildable<Route>> marketDiscoveryRoute(final AuthorizationHeaderFilter authorizationHeaderFilter) {
         return r -> r
