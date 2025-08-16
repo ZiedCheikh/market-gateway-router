@@ -12,21 +12,21 @@ import tu.startup.market.gateway.web.handler.UserHandler;
 @Component
 public class UserRouter {
 
-	private UserHandler userHandler;
+    private UserHandler userHandler;
 
-	public UserRouter(final UserHandler userHandler) {
-		this.userHandler = userHandler;
-	}
+    public UserRouter(final UserHandler userHandler) {
+        this.userHandler = userHandler;
+    }
 
-	@Bean
-	public WebProperties.Resources resources() {
-		return new WebProperties.Resources();
-	}
+    @Bean
+    public WebProperties.Resources resources() {
+        return new WebProperties.Resources();
+    }
 
-	@Bean
-	public RouterFunction<ServerResponse> publicRoutes() {
-		return RouterFunctions
-				.route(RequestPredicates.GET("/sso/user"),
-						userHandler::getUserInfo);
-	}
+    @Bean
+    public RouterFunction<ServerResponse> publicRoutes() {
+        return RouterFunctions
+                .route(RequestPredicates.GET("/user/sso"),
+                        userHandler::getUserInfo);
+    }
 }

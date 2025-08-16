@@ -6,10 +6,7 @@ import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import tu.startup.market.gateway.filter.AuthorizationHeaderFilter;
-import tu.startup.market.gateway.web.router.routes.DiscoveryRoutes;
-import tu.startup.market.gateway.web.router.routes.OrderRoutes;
-import tu.startup.market.gateway.web.router.routes.PortalRoutes;
-import tu.startup.market.gateway.web.router.routes.SaleRoutes;
+import tu.startup.market.gateway.web.router.routes.*;
 
 @Configuration
 public class GatewayRoutesConfig {
@@ -28,14 +25,14 @@ public class GatewayRoutesConfig {
     public RouteLocator customRouteLocator(final RouteLocatorBuilder builder) {
         //@formatter:off
         return builder.routes()
-                .route(PortalRoutes.marketPortalRoute(marketAdminPortalUrl))
-                .route(DiscoveryRoutes.marketDiscoveryRoute(authorizationHeaderFilter))
-                .route(SaleRoutes.salesByStatusRoute())
-                .route(SaleRoutes.saleSaveRoute())
-                .route(OrderRoutes.orderByStatusRoute())
-                .route(OrderRoutes.orderForCustomerRoute())
-                .route(OrderRoutes.orderByKeyRoute())
-                .route(OrderRoutes.orderSaveRoute())
+                .route(PortalRoute.marketPortalRoute(marketAdminPortalUrl))
+                .route(DiscoveryRoute.marketDiscoveryRoute(authorizationHeaderFilter))
+                .route(SaleRoute.salesByStatusRoute())
+                .route(SaleRoute.saleSaveRoute())
+                .route(OrderRoute.orderByStatusRoute())
+                .route(OrderRoute.orderForCustomerRoute())
+                .route(OrderRoute.orderByKeyRoute())
+                .route(OrderRoute.orderSaveRoute())
                 .build();
     }
     //@formatter:on

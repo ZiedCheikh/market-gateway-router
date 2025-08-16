@@ -11,7 +11,7 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static tu.startup.market.gateway.web.router.routes.Constant.*;
 
-public class OrderRoutes {
+public class OrderRoute {
 
     public static Function<PredicateSpec, Buildable<Route>> orderByStatusRoute() {
         return r -> r

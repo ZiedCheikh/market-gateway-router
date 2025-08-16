@@ -10,7 +10,7 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static tu.startup.market.gateway.web.router.routes.Constant.*;
 
-public class SaleRoutes {
+public class SaleRoute {
 
     public static Function<PredicateSpec, Buildable<Route>> salesByStatusRoute() {
         return r -> r

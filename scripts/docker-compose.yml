@@ -69,6 +69,8 @@ services:
       - MARKET_GATEWAY_HOST_URL=http://myhost:8082
       - MARKET_ADMIN_PORTAL_HOST_URL=http://marketadminportal:80/portal
       - MARKET_GATEWAY_HOST=http://myhost:8082
+      - AUTH_SUCCESS_REDIRECT_URL=http://myhost:8082/portal/launchpad/dashboard/analytics
+      - LOGOUT_SUCCESS_REDIRECT_URL=http://myhost:8082/portal/landing
   sales:
     image: market-sales-service:latest
     container_name: market-sales-service
